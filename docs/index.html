@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealAi - Your Medical Claims Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0e6e4c;
+            --secondary: #1a8b6b;
+            --light: #e6f7f2;
+            --accent: #0d5e41;
+            --dark: #04301f;
+            --white: #ffffff;
+            --gray: #f0f2f5;
+            --text: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--gray);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            background-color: var(--accent);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--white);
+            color: var(--white);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--white);
+            color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--light);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-large {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background-color: var(--white);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-title p {
+            color: var(--text);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            color: var(--text);
+            margin-bottom: 15px;
+        }
+        
+        .feature-link {
+            color: var(--secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+        
+        .feature-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 4rem 0;
+            background-color: var(--light);
+        }
+        
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 0 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+        
+        .step h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        /* Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .chatbot-button {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chatbot-header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+        
+        .bot-message {
+            background-color: var(--light);
+            padding: 10px 15px;
+            border-radius: 15px 15px 15px 0;
+            align-self: flex-start;
+        }
+        
+        .user-message {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 10px 15px;
+            border-radius: 15px 15px 0 15px;
+            margin-left: auto;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid var(--gray);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .send-message {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Dashboard Preview */
+        .dashboard-preview {
+            padding: 4rem 0;
+            background-color: var(--white);
+        }
+        
+        .dashboard-image {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .dashboard-image img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 4rem 0;
+            background-color: var(--light);
+        }
+        
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .testimonial-card {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .author-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-content p {
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 18px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            color: var(--white);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--secondary);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .steps {
+                flex-direction: column;
+            }
+            
+            .step {
+                margin-bottom: 40px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        #upload-new-doc{
+            text-decoration: none;
+        }
+        #loggggg{
+            text-decoration: none;
+        }
+        #signnnnn{
+            text-decoration: none;
+        }
+        #getttt{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>HealAi</span>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="auth-buttons">
+                <a href="login.html" id="loggggg" class="btn btn-outline">Log In</a>
+                <a href="signup2.html" class="btn btn-primary" id="signnnnn">Sign Up</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Simplifying Medical Claims Processing</h1>
+            <p>HealAi uses advanced AI to help patients navigate the complex world of medical insurance claims, making the process faster and more transparent.</p>
+            
+            <div class="cta-buttons">
+                <a href="upload2.html" id="upload-new-doc" class="btn btn-primary btn-large">Upload New Document</a>
+                <button class="btn btn-outline btn-large">View My Claims</button>
+            </div>
+            
+            
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Core Features</h2>
+                <p>HealAi provides powerful tools to simplify your medical claims experience</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Document Summarization</h3>
+                    <p>Extracts and summarizes lengthy medical reports into short, understandable summaries that highlight the most important information.</p>
+                    <a href="https://70227535-564b-451f-b9c9-20b02677224b-00-sbmutj36mg19.janeway.replit.dev/" class="feature-link"> <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Insurance Advisor</h3>
+                    <p>AI Insurace Advisor offers instant, personalized health insurance guidance powered by advanced artificial intelligence.</p>
+                    <a href="https://1dddc6bf-5dce-4d20-961a-b5d8e4910e4d-00-3vt4om1k2glju.picard.replit.dev/" class="feature-link"> <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <h3>Auto Document Generator</h3>
+                    <p>Automatically generates professional claim letters, emails, or appeals using patient data to save you time and effort.</p>
+                    <a href="#" class="feature-link"> <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Patient Chatbot</h3>
+                    <p>AI chatbot that provides instant answers to questions regarding bills, documents, or the claim process using your stored data.</p>
+                    <a href="https://32914d44-db4c-415b-9a4f-95e1c18c7726-00-19kl312x90gq6.janeway.replit.dev/" class="feature-link"> <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Claims Dashboard</h3>
+                    <p>Track all your claims in one place with our intuitive dashboard showing statuses, timelines, and next steps.</p>
+                    <a href="#" class="feature-link"> <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Document Storage</h3>
+                    <p>Store all your medical documents and claims in one secure, HIPAA-compliant location with easy access whenever needed.</p>
+                    <a href="#" class="feature-link"> <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Getting started with HealAi is quick and easy</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload Documents</h3>
+                    <p>Upload your medical bills, insurance statements, and other relevant documents securely to our platform.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Analysis</h3>
+                    <p>Our AI analyzes your documents, extracts important information, and prepares summaries and recommendations.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Review & Submit</h3>
+                    <p>Review the AI-generated claim information, make any necessary adjustments, and submit your claim.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Track Progress</h3>
+                    <p>Monitor your claim's progress in real-time through our intuitive dashboard and receive timely updates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Dashboard Preview Section -->
+    <section class="dashboard-preview">
+        <div class="container">
+            <div class="section-title">
+                <h2>Your Claims Dashboard</h2>
+                <p>Easily manage and track all your medical claims in one place</p>
+            </div>
+            
+            <div class="dashboard-image">
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Users Say</h2>
+                <p>Thousands of patients have simplified their medical claims process with HealAi</p>
+            </div>
+            
+            <div class="testimonial-container">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"HealAi saved me countless hours dealing with my insurance company. The document summarization feature helped me understand my policy coverage within minutes instead of hours."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">JS</div>
+                        <div class="author-info">
+                            <h4>Jennifer S.</h4>
+                            <p>Patient, Chicago</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"The chatbot feature is incredible! It answered all my questions about my claim status without having to wait on hold with my insurance provider. This tool is a game-changer."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MD</div>
+                        <div class="author-info">
+                            <h4>Michael D.</h4>
+                            <p>Patient, Seattle</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container cta-content">
+            <h2>Ready to Simplify Your Medical Claims?</h2>
+            <p>Join thousands of users who have saved time and reduced stress with HealAi</p>
+            <a href="signup2.html" id="getttt" class="btn btn-primary btn-large">Get Started Now </a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>HealAi</span>
+                    </div>
+                    <p style="margin-top: 15px;">Making medical claims processing simple, fast, and transparent with AI.</p>
+                    <div class="social-links" style="margin-top: 20px;">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Features</h3>
+                    <ul>
+                        <li><a href="/document-summarization">Document Summarization</a></li>
+                        <li><a href="/term-explainer">Term Explainer</a></li>
+                        <li><a href="#">Auto Document Generator</a></li>
+                        <li><a href="#">Patient Chatbot</a></li>
+                        <li><a href="#">Claims Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 HealAi. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Patient Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-button" id="chatbot-trigger">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+        
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <i class="fas fa-robot"></i>
+                    <span>Patient Chatbot</span>
+                </div>
+                <button class="close-chat" id="close-chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    Hello! I'm your HealAi assistant. How can I help you with your medical claims today?
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" placeholder="Type your question here..." id="chat-input-field">
+                <button class="send-message" id="send-message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+       document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Chatbot
+            initChatbot();
+            
+            // Initialize smooth scrolling
+            initSmoothScrolling();
+            
+            // Initialize animation effects
+            initAnimations();
+            
+            // Initialize feature links
+            initFeatureLinks();
+        });
+
+        // Chatbot Functionality
+        function initChatbot() {
+            const chatbotTrigger = document.getElementById('chatbot-trigger');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const closeChat = document.getElementById('close-chat');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInputField = document.getElementById('chat-input-field');
+            const sendMessage = document.getElementById('send-message');
+            
+            // Check if elements exist before adding event listeners
+            if (!chatbotTrigger || !chatbotWindow) {
+                console.error('Chatbot elements not found in the DOM');
+                return;
+            }
+            
+            // Set initial state
+            let isChatOpen = false;
+            
+            // Common medical claim terms for the AI to recognize
+            const claimTerms = {
+                'deductible': 'The amount you pay for covered healthcare services before your insurance plan starts to pay.',
+                'copay': 'A fixed amount you pay for a covered healthcare service, usually when you receive the service.',
+                'coinsurance': 'The percentage of costs you pay after you have met your deductible.',
+                'eob': 'An Explanation of Benefits (EOB) is a statement from your health insurance company explaining what medical treatments and services were paid for on your behalf.',
+                'prior authorization': 'Approval required from your health insurance company before you receive certain services or treatments.',
+                'in-network': 'Providers or healthcare facilities that have contracted with your health insurance company to provide services at negotiated rates.',
+                'out-of-network': 'Providers or facilities that havent contracted with your health insurance company, which usually results in higher costs.',
+                'premium': 'The amount you pay for your health insurance every month.',
+                'claim': 'A request for payment that you or your healthcare provider submits to your health insurance company when you receive services.',
+                'appeal': 'A request to review a denied claim or service.',
+                'hsa': 'A Health Savings Account (HSA) is a tax-advantaged account for individuals with high-deductible health plans to save for medical expenses.',
+                'fsa': 'A Flexible Spending Account (FSA) is a special account where you put money that you can use to pay for certain out-of-pocket healthcare costs.'
+            };
+            
+            // Knowledge base for the chatbot
+            const knowledgeBase = {
+                'hello': 'Hi there! How can I assist you with your medical claims today?',
+                'hi': 'Hello! Im your HealAi assistant. What can I help you with?',
+                'hey': 'Hello there! How can I help with your medical claims?',
+                'help': 'I can help you with uploading documents, checking claim status, explaining medical terms, and navigating the insurance claim process. Just let me know what you need!',
+                
+                // Document uploads
+                'upload': 'To upload a document, click on the "Upload New Document" button on the homepage or in your dashboard. You can upload medical bills, insurance statements, doctor notes, and more.',
+                'document': 'We support various document formats including PDF, JPG, PNG, and DOCX. Each document will be securely stored and processed by our AI system.',
+                'scan': 'You can scan documents using your phone camera or upload existing files from your computer or cloud storage.',
+                
+                // Claim status inquiries
+                'status': 'I can check your claim status for you. Could you provide your claim reference number? In a real interaction, I would look this up in our secure database.',
+                'pending': 'Pending claims are still being processed. The average processing time is 5-7 business days.',
+                'approved': 'When a claim is approved, you will receive an email notification and the details will appear in your dashboard.',
+                'denied': 'If your claim was denied, we can help you understand why and assist with the appeals process if needed.',
+                'appeal': 'To appeal a denied claim, go to the claim details page and click "Start Appeal Process". Our system will guide you through the necessary steps.',
+                
+                // Features explanation
+                'summarize': 'Our Document Summarization feature extracts key information from lengthy medical reports and insurance policies, presenting the most important points in an easy-to-understand format.',
+                'explain': 'The Term Explainer breaks down complex medical and insurance terminology into simple language. Just highlight any term you dont understand.',
+                'generator': 'The Auto Document Generator creates professional appeal letters, request letters, and emails based on your specific situation and claim data.',
+                'chatbot': 'That iss me! Im here to answer questions about your claims, help you navigate the platform, and explain medical or insurance terms.',
+                'dashboard': 'Your personalized dashboard shows all your claims in one place, with status indicators, important dates, and action items clearly marked.',
+                
+                // Account related
+                'account': 'You can manage your account settings by clicking on your profile icon in the top right corner of the dashboard.',
+                'password': 'To change your password, go to Account Settings > Security > Change Password.',
+                'delete': 'If you wish to delete your account, please contact our support team at support@healai.com for assistance.',
+                'privacy': 'We take privacy seriously. All your medical documents and personal information are encrypted and stored securely in compliance with HIPAA regulations.',
+                
+                // Contact information
+                'contact': 'You can reach our support team at support@healai.com or call us at (555) 123-4567 during business hours (Mon-Fri, 9AM-5PM EST).',
+                'human': 'If you would prefer to speak with a human representative, please call our support line at (555) 123-4567 or email support@healai.com.',
+                'hours': 'Our support team is available Monday through Friday, 9AM to 5PM Eastern Time.',
+                
+                // Default response
+                'default': 'Im here to help with any questions about your medical claims, documents, or the claim process. Could you provide more details about what you need assistance with?'
+            };
+            
+            // Toggle chatbot window
+            if (chatbotTrigger) {
+                chatbotTrigger.addEventListener('click', function() {
+                    if (isChatOpen) {
+                        chatbotWindow.style.display = 'none';
+                        isChatOpen = false;
+                    } else {
+                        chatbotWindow.style.display = 'flex';
+                        // Only focus if input field exists
+                        if (chatInputField) chatInputField.focus();
+                        isChatOpen = true;
+                    }
+                });
+            }
+            
+            if (closeChat) {
+                closeChat.addEventListener('click', function() {
+                    chatbotWindow.style.display = 'none';
+                    isChatOpen = false;
+                });
+            }
+            
+            // Function to add a message to the chat (from either user or bot)
+            function addMessageToChat(message, sender) {
+                if (!chatMessages) {
+                    console.error('Chat messages container not found');
+                    return;
+                }
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+                
+                // Check if the message contains a medical term to explain
+                if (sender === 'bot') {
+                    let messageText = message;
+                    
+                    // Check if any terms in the knowledge base need to be linked
+                    for (const [term, definition] of Object.entries(claimTerms)) {
+                        const termRegex = new RegExp(`\\b${term}\\b`, 'gi');
+                        if (messageText.toLowerCase().includes(term)) {
+                            messageText = messageText.replace(termRegex, `<span class="term-highlight" title="${definition}">${term}</span>`);
+                        }
+                    }
+                    
+                    messageDiv.innerHTML = messageText;
+                } else {
+                    messageDiv.textContent = message;
+                }
+                
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to the bottom of the chat
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to process user input and generate response
+            function processUserInput(userInput) {
+                const input = userInput.toLowerCase().trim();
+                
+                // First check if the user is asking about a medical term
+                for (const [term, definition] of Object.entries(claimTerms)) {
+                    if (input.includes(term) || input.includes(`what is ${term}`) || input.includes(`explain ${term}`)) {
+                        return `${term.charAt(0).toUpperCase() + term.slice(1)}: ${definition}`;
+                    }
+                }
+                
+                // Then check against our knowledge base
+                for (const [key, value] of Object.entries(knowledgeBase)) {
+                    if (input.includes(key)) {
+                        return value;
+                    }
+                }
+                
+                // If no matches, return default response
+                return knowledgeBase.default;
+            }
+            
+            // Function to handle sending a message
+            function sendUserMessage() {
+                if (!chatInputField || !chatMessages) {
+                    console.error('Chat input or messages container not found');
+                    return;
+                }
+                
+                const userInput = chatInputField.value.trim();
+                if (userInput === '') return;
+                
+                // Add user message to chat
+                addMessageToChat(userInput, 'user');
+                
+                // Clear input field
+                chatInputField.value = '';
+                
+                // Process user input and get response
+                setTimeout(() => {
+                    const botResponse = processUserInput(userInput);
+                    addMessageToChat(botResponse, 'bot');
+                    
+                    // If the bot response mentions uploading, offer quick action
+                    if (botResponse.toLowerCase().includes('upload')) {
+                        setTimeout(() => {
+                            addMessageToChat('Would you like to upload a document now?', 'bot');
+                            
+                            // Add quick reply buttons
+                            const quickReplies = document.createElement('div');
+                            quickReplies.classList.add('quick-replies');
+                            
+                            const yesButton = document.createElement('button');
+                            yesButton.textContent = 'Yes, upload now';
+                            yesButton.addEventListener('click', function() {
+                                addMessageToChat('Yes, upload now', 'user');
+                                setTimeout(() => {
+                                    addMessageToChat('Great! Redirecting you to the document upload page...', 'bot');
+                                    // In a real app, this would redirect to the upload page
+                                    window.location.href = 'upload2.html';
+                                }, 1000);
+                            });
+                            
+                            const noButton = document.createElement('button');
+                            noButton.textContent = 'Not now';
+                            noButton.addEventListener('click', function() {
+                                addMessageToChat('Not now', 'user');
+                                setTimeout(() => {
+                                    addMessageToChat('No problem. Is there anything else I can help you with?', 'bot');
+                                }, 1000);
+                            });
+                            
+                            quickReplies.appendChild(yesButton);
+                            quickReplies.appendChild(noButton);
+                            chatMessages.appendChild(quickReplies);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, 1000);
+                    }
+                    
+                    // If the response mentions claim status, simulate checking status
+                    if (botResponse.toLowerCase().includes('claim status') || botResponse.toLowerCase().includes('reference number')) {
+                        setTimeout(() => {
+                            addMessageToChat('For demonstration purposes, you can type a claim number like "CLM123456"', 'bot');
+                        }, 2000);
+                    }
+                    
+                    // If user inputs something that looks like a claim number, show status
+                    if (userInput.match(/^CLM\d{6}$/i)) {
+                        setTimeout(() => {
+                            addMessageToChat(`Claim ${userInput} Status: <strong>In Processing</strong><br>Submitted: April 5, 2025<br>Estimated Completion: April 12, 2025<br><br>Would you like to see more details?`, 'bot');
+                            
+                            // Add quick reply buttons
+                            const quickReplies = document.createElement('div');
+                            quickReplies.classList.add('quick-replies');
+                            
+                            const detailsButton = document.createElement('button');
+                            detailsButton.textContent = 'Show details';
+                            detailsButton.addEventListener('click', function() {
+                                addMessageToChat('Show details', 'user');
+                                setTimeout(() => {
+                                    addMessageToChat(`<strong>Claim Details for ${userInput}</strong><br>
+                                    <br>Provider: Northeast Medical Center
+                                    <br>Service Date: March 30, 2025
+                                    <br>Billed Amount: $1,250.00
+                                    <br>Insurance: BlueCross HealthPlus
+                                    <br>Coverage: In-Network (80%)
+                                    <br>Current Stage: Medical Necessity Review
+                                    <br><br>Next Steps: Once the review is complete, the claim will move to payment processing if approved.`, 'bot');
+                                }, 1000);
+                            });
+                            
+                            const trackButton = document.createElement('button');
+                            trackButton.textContent = 'Track updates';
+                            trackButton.addEventListener('click', function() {
+                                addMessageToChat('Track updates', 'user');
+                                setTimeout(() => {
+                                    addMessageToChat('You\'ll now receive email notifications about any status changes for this claim. You can manage notification preferences in your account settings.', 'bot');
+                                }, 1000);
+                            });
+                            
+                            quickReplies.appendChild(detailsButton);
+                            quickReplies.appendChild(trackButton);
+                            chatMessages.appendChild(quickReplies);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, 1000);
+                    }
+                }, 600);
+            }
+            
+            // Send message on button click
+            if (sendMessage) {
+                sendMessage.addEventListener('click', sendUserMessage);
+            }
+            
+            // Send message on Enter key
+            if (chatInputField) {
+                chatInputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendUserMessage();
+                    }
+                });
+            }
+            
+            // Add CSS for term highlights and quick replies
+            const style = document.createElement('style');
+            style.textContent = `
+                .term-highlight {
+                    color: #0e6e4c;
+                    text-decoration: underline;
+                    cursor: help;
+                    font-weight: 500;
+                }
+                
+                .quick-replies {
+                    display: flex;
+                    gap: 10px;
+                    margin: 10px 0 10px auto;
+                    max-width: 80%;
+                }
+                
+                .quick-replies button {
+                    background-color: #1a8b6b;
+                    color: white;
+                    border: none;
+                    border-radius: 15px;
+                    padding: 8px 12px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: all 0.2s ease;
+                }
+                
+                .quick-replies button:hover {
+                    background-color: #0e6e4c;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Initialize with welcome message
+            if (chatMessages) {
+                setTimeout(() => {
+                    const initialMessages = [
+                        "Hello! I'm your HealAi assistant. How can I help you with your medical claims today?",
+                        "You can ask me about uploading documents, checking claim status, or explaining medical terms."
+                    ];
+                    
+                    addMessageToChat(initialMessages[0], 'bot');
+                    
+                    setTimeout(() => {
+                        addMessageToChat(initialMessages[1], 'bot');
+                    }, 1000);
+                }, 500);
+            }
+        }
+
+        // Smooth scrolling functionality
+        function initSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Animation effects for better UX
+        function initAnimations() {
+            // Observe elements to animate them when they come into view
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            // Elements to animate
+            const elements = document.querySelectorAll('.feature-card, .step, .testimonial-card');
+            elements.forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Add animation CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                .feature-card, .step, .testimonial-card {
+                    opacity: 0;
+                    transform: translateY(20px);
+                    transition: opacity 0.5s ease, transform 0.5s ease;
+                }
+                
+                .animate-in {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Form validation for demo purposes
+            const signupForm = document.querySelector('.cta-section .btn-primary');
+            if (signupForm) {
+                signupForm.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('In a complete implementation, this would open a signup form. For now, it\'s just a demonstration.');
+                });
+            }
+            
+            // Dashboard preview interaction (simple hover effect)
+            const dashboardImage = document.querySelector('.dashboard-image img');
+            if (dashboardImage) {
+                dashboardImage.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.transition = 'transform 0.3s ease';
+                    this.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.15)';
+                });
+                
+                dashboardImage.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+                });
+            }
+        }
+
+        // Function to handle hyperlink functionality for feature sections
+        function initFeatureLinks() {
+            // Document Summarization link
+            const docSumLink = document.getElementById('doc-summarization-link');
+            if (docSumLink) {
+                docSumLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('This would navigate to the Document Summarization feature page where you can upload medical documents for AI summarization.');
+                });
+            }
+            
+            // Term Explainer link
+            const termExplainerLink = document.getElementById('term-explainer-link');
+            if (termExplainerLink) {
+                termExplainerLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('This would navigate to the Term Explainer tool where you can paste text and get simplified explanations of medical terms.');
+                });
+            }
+            
+            // Auto Document Generator link
+            const docGenLink = document.getElementById('doc-generator-link');
+            if (docGenLink) {
+                docGenLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('This would navigate to the Document Generator tool where you can create appeal letters, emails, and claim-related documents.');
+                });
+            }
+            
+            // Patient Chatbot link
+            const chatbotLink = document.getElementById('patient-chatbot-link');
+            if (chatbotLink) {
+                chatbotLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Show the chatbot
+                    const chatbotWindow = document.getElementById('chatbot-window');
+                    if (chatbotWindow) {
+                        chatbotWindow.style.display = 'flex';
+                        const chatInputField = document.getElementById('chat-input-field');
+                        if (chatInputField) chatInputField.focus();
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

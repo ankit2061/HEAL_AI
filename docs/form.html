@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealAi - File Your Claim</title>
+    <style>
+        :root {
+            --primary-color: #0a8043;
+            --primary-dark: #076d37;
+            --light-gray: #f5f5f5;
+            --dark-gray: #555;
+            --border-color: #ddd;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 26px;
+        }
+        
+        .nav-links {
+            display: flex;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-initial {
+            background-color: white;
+            color: var(--primary-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .content {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .page-title {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1 0 300px;
+            margin: 0 10px 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(10, 128, 67, 0.2);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .footer {
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--dark-gray);
+        }
+        
+        .footer-links {
+            margin-top: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--primary-color);
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        
+        .required::after {
+            content: "*";
+            color: red;
+            margin-left: 5px;
+        }
+        
+        /* Success modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .success-icon {
+            color: var(--primary-color);
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Loading indicator */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Alert styles */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Patient info card */
+        .patient-info-card {
+            background-color: #f0f7f4;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .patient-info-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .patient-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .patient-id {
+            color: var(--dark-gray);
+            font-size: 14px;
+        }
+        
+        .patient-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .patient-detail-item {
+            margin-bottom: 5px;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: var(--dark-gray);
+            display: block;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .form-group {
+                flex: 1 0 100%;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .patient-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">⚕️</span> HealAi
+        </div>
+        <div class="nav-links">
+            <a href="#">Features</a>
+            <a href="#">How It Works</a>
+            <a href="#">Testimonials</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="user-info">
+            <span class="user-initial">JS</span>
+            John Smith
+        </div>
+    </div>
+    
+    <div class="content">
+        <h1 class="page-title">Complete Your Claim Details</h1>
+        
+        <!-- Alerts -->
+        <div id="alertSuccess" class="alert alert-success">
+            Patient data loaded successfully!
+        </div>
+        <div id="alertError" class="alert alert-error">
+            Error loading patient data. Please fill in the form manually.
+        </div>
+        
+        <!-- Patient Info Card (shows when data is loaded) -->
+        <div id="patientInfoCard" class="patient-info-card hidden">
+            <div class="patient-info-header">
+                <div class="patient-name" id="cardPatientName">Rohit Singh</div>
+                <div class="patient-id" id="cardInsuranceId">INS79116832</div>
+            </div>
+            <div class="patient-details">
+                <div class="patient-detail-item">
+                    <span class="detail-label">Father's Name</span>
+                    <span class="detail-value" id="cardFatherName">Harish Singh</span>
+                </div>
+                <div class="patient-detail-item">
+                    <span class="detail-label">Gender</span>
+                    <span class="detail-value" id="cardGender">Male</span>
+                </div>
+                <div class="patient-detail-item">
+                    <span class="detail-label">Blood Group</span>
+                    <span class="detail-value" id="cardBloodGroup">O+</span>
+                </div>
+                <div class="patient-detail-item">
+                    <span class="detail-label">Phone</span>
+                    <span class="detail-value" id="cardPhone">8333445566</span>
+                </div>
+                <div class="patient-detail-item">
+                    <span class="detail-label">Hospital</span>
+                    <span class="detail-value" id="cardHospital">Apollo Gleneagles</span>
+                </div>
+                <div class="patient-detail-item">
+                    <!-- <span class="detail-label">Record Created</span>
+                    <span class="detail-value" id="cardCreatedAt">11 days ago</span> -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <form id="claimForm">
+                <div class="form-section">
+                    <h2 class="section-title">Patient Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required" for="patientFirstName">First Name</label>
+                            <input type="text" id="patientFirstName" name="patientFirstName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="patientLastName">Last Name</label>
+                            <input type="text" id="patientLastName" name="patientLastName" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required" for="patientDOB">Date of Birth</label>
+                            <input type="date" id="patientDOB" name="patientDOB" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="patientPhone">Phone Number</label>
+                            <input type="tel" id="patientPhone" name="patientPhone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required" for="patientEmail">Email Address</label>
+                            <input type="email" id="patientEmail" name="patientEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="patientGender">Gender</label>
+                            <select id="patientGender" name="patientGender" class="form-control">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="patientAadhar">Aadhar Card Number</label>
+                            <input type="text" id="patientAadhar" name="patientAadhar" class="form-control" placeholder="XXXX-XXXX-XXXX">
+                        </div>
+                        <div class="form-group">
+                            <label for="patientRelationship">Relationship to Policy Holder</label>
+                            <select id="patientRelationship" name="patientRelationship" class="form-control">
+                                <option value="self">Self</option>
+                                <option value="spouse">Spouse</option>
+                                <option value="child">Child</option>
+                                <option value="parent">Parent</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Insurance Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required" for="insuranceProvider">Insurance Provider</label>
+                            <input type="text" id="insuranceProvider" name="insuranceProvider" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="policyNumber">Policy Number</label>
+                            <input type="text" id="policyNumber" name="policyNumber" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="groupNumber">Group Number</label>
+                            <input type="text" id="groupNumber" name="groupNumber" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="secondaryInsurance">Secondary Insurance (if applicable)</label>
+                            <input type="text" id="secondaryInsurance" name="secondaryInsurance" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Claim Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required" for="serviceDate">Date of Service</label>
+                            <input type="date" id="serviceDate" name="serviceDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="providerName">Provider Name</label>
+                            <input type="text" id="providerName" name="providerName" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="diagnosis">Diagnosis/Condition</label>
+                            <input type="text" id="diagnosis" name="diagnosis" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="claimAmount">Total Claim Amount (₹)</label>
+                            <input type="number" id="claimAmount" name="claimAmount" class="form-control" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1 0 100%;">
+                            <label for="claimDescription">Description of Services</label>
+                            <textarea id="claimDescription" name="claimDescription" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Confirmation</h2>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="confirmAccuracy" name="confirmAccuracy" required>
+                        <label for="confirmAccuracy">I confirm that all information provided is accurate and complete</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                        <label for="agreeTerms">I agree to the terms of service and privacy policy</label>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='upload2.html'">Back</button>
+                    <button type="submit" class="btn">Submit Claim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="success-icon">✓</div>
+            <h2>Claim Submitted Successfully!</h2>
+            <p>Your claim has been successfully submitted. Your claim reference number is:</p>
+            <h3 id="claimReference">CLM-20250420-8742</h3>
+            <p>You will receive an email confirmation shortly. Our team will review your claim and contact you if any additional information is needed.</p>
+            <p>Expected processing time: 3-5 business days</p>
+            <button class="btn" onclick="window.location.href='index.html'">Back to Dashboard</button>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+    
+    <div class="footer">
+        <p>©️ 2025 HealAi. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Support</a>
+            <a href="#">Contact Us</a>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const claimForm = document.getElementById('claimForm');
+        const successModal = document.getElementById('successModal');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const alertSuccess = document.getElementById('alertSuccess');
+        const alertError = document.getElementById('alertError');
+        const patientInfoCard = document.getElementById('patientInfoCard');
+        
+        // Current date for reference (April 20, 2025)
+        const currentDate = new Date('2025-04-20');
+        
+        // Set today's date as default for service date
+        document.getElementById('serviceDate').value = formatDateForInput(currentDate);
+        
+        // Fetch patient data when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Get insurance ID from URL query parameter or session storage
+            const urlParams = new URLSearchParams(window.location.search);
+            const insuranceId = urlParams.get('insurance_id') || sessionStorage.getItem('insuranceId');
+            
+            if (insuranceId) {
+                await fetchPatientData(insuranceId);
+            }
+            
+            // Also try to get extracted data from session storage (from upload page)
+            const extractedData = sessionStorage.getItem('extractedData');
+            if (extractedData) {
+                try {
+                    const data = JSON.parse(extractedData);
+                    prefillFormWithExtractedData(data);
+                } catch (e) {
+                    console.error('Error parsing extracted data:', e);
+                }
+            }
+        });
+        
+        // Handle form submission
+        claimForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            // Show loading overlay
+            loadingOverlay.style.display = 'flex';
+            
+            try {
+                // Get form data
+                const formData = new FormData(claimForm);
+                
+                // Send form data to backend
+                const response = await fetch('/api/submit-claim', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success modal with claim reference
+                    document.getElementById('claimReference').textContent = result.claim_reference || generateClaimReference();
+                    successModal.style.display = 'block';
+                    
+                    // Clear session storage
+                    sessionStorage.removeItem('extractedData');
+                    sessionStorage.removeItem('insuranceId');
+                } else {
+                    throw new Error(result.message || 'Failed to submit claim');
+                }
+            } catch (error) {
+                console.error('Error submitting claim:', error);
+                showAlert(alertError, error.message || 'Error submitting claim. Please try again.');
+            } finally {
+                // Hide loading overlay
+                loadingOverlay.style.display = 'none';
+            }
+        });
+        
+        // Fetch patient data from backend
+        async function fetchPatientData(insuranceId) {
+            try {
+                loadingOverlay.style.display = 'flex';
+                
+                const response = await fetch(`/api/patient/${insuranceId}`);
+                const data = await response.json();
+                
+                if (data.success && data.patient) {
+                    // Prefill the form with patient data
+                    prefillFormWithPatientData(data.patient);
+                    
+                    // Show success message
+                    showAlert(alertSuccess, 'Patient data loaded successfully!');
+                    
+                    // Show patient info card
+                    updatePatientInfoCard(data.patient);
+                    patientInfoCard.classList.remove('hidden');
+                } else {
+                    throw new Error(data.message || 'Patient data not found');
+                }
+            } catch (error) {
+                console.error('Error fetching patient data:', error);
+                showAlert(alertError, 'Error loading patient data. Please fill in the form manually.');
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+        
+        // Prefill form with patient data from MongoDB
+        function prefillFormWithPatientData(patient) {
+            // Split name into first and last name
+            if (patient.name) {
+                const nameParts = patient.name.split(' ');
+                document.getElementById('patientFirstName').value = nameParts[0] || '';
+                document.getElementById('patientLastName').value = nameParts.slice(1).join(' ') || '';
+            }
+            
+            // Set other patient fields
+            if (patient.phone_number) document.getElementById('patientPhone').value = patient.phone_number;
+            if (patient.aadhar_card) document.getElementById('patientAadhar').value = patient.aadhar_card;
+            if (patient.gender) {
+                const genderSelect = document.getElementById('patientGender');
+                for (let i = 0; i < genderSelect.options.length; i++) {
+                    if (genderSelect.options[i].value.toLowerCase() === patient.gender.toLowerCase()) {
+                        genderSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            
+            // Set insurance fields
+            if (patient.insurance_id) document.getElementById('policyNumber').value = patient.insurance_id;
+            if (patient.hospital_name) {
+                document.getElementById('providerName').value = patient.hospital_name;
+                document.getElementById('insuranceProvider').value = 'Apollo Insurance'; // Default provider based on hospital
+            }
+            
+            // Set diagnosis if available
+            if (patient.disease_name) document.getElementById('diagnosis').value = patient.disease_name;
+        }
+        
+        // Prefill form with extracted data from document processor
+        function prefillFormWithExtractedData(extractedData) {
+            for (const item of extractedData) {
+                const label = item.Label;
+                const text = item.Text;
+                
+                switch (label) {
+                    case "Name":
+                        const nameParts = text.split(' ');
+                        document.getElementById('patientFirstName').value = nameParts[0] || '';
+                        document.getElementById('patientLastName').value = nameParts.slice(1).join(' ') || '';
+                        break;
+                    case "Phone Number":
+                        document.getElementById('patientPhone').value = text;
+                        break;
+                    case "Aadhar Card":
+                        document.getElementById('patientAadhar').value = text;
+                        break;
+                    case "Gender":
+                        const genderSelect = document.getElementById('patientGender');
+                        for (let i = 0; i < genderSelect.options.length; i++) {
+                            if (genderSelect.options[i].value.toLowerCase() === text.toLowerCase()) {
+                                genderSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                        break;
+                    case "Insurance ID":
+                        document.getElementById('policyNumber').value = text;
+                        break;
+                    case "Hospital Name":
+                        document.getElementById('providerName').value = text;
+                        break;
+                    case "Disease Name":
+                        document.getElementById('diagnosis').value = text;
+                        break;
+                    case "Amount":
+                        document.getElementById('claimAmount').value = text.replace(/[^\d.]/g, '');
+                        break;
+                }
+            }
+        }
+        
+        // Update patient info card with patient data
+        function updatePatientInfoCard(patient) {
+            document.getElementById('cardPatientName').textContent = patient.name || 'Unknown';
+            document.getElementById('cardInsuranceId').textContent = patient.insurance_id || '';
+            document.getElementById('cardFatherName').textContent = patient.father_name || 'N/A';
+            document.getElementById('cardGender').textContent = patient.gender || 'N/A';
+            document.getElementById('cardBloodGroup').textContent = patient.blood_group || 'N/A';
+            document.getElementById('cardPhone').textContent = patient.phone_number || 'N/A';
+            document.getElementById('cardHospital').textContent = patient.hospital_name || 'N/A';
+            
+            // Format created_at date
+            if (patient.created_at) {
+                const createdDate = new Date(patient.created_at);
+                const daysDiff = Math.floor((currentDate - createdDate) / (1000 * 60 * 60 * 24));
+                
+                let formattedDate;
+                if (daysDiff === 0) {
+                    formattedDate = "Today";
+                } else if (daysDiff === 1) {
+                    formattedDate = "Yesterday";
+                } else if (daysDiff < 7) {
+                    formattedDate = `${daysDiff} days ago`;
+                } else if (daysDiff < 30) {
+                    const weeks = Math.floor(daysDiff / 7);
+                    formattedDate = `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+                } else {
+                    formattedDate = createdDate.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                }
+                
+                // document.getElementById('cardCreatedAt').textContent = formattedDate;
+            } else {
+                document.getElementById('cardCreatedAt').textContent = 'N/A';
+            }
+        }
+        
+        // Show alert message
+        function showAlert(alertElement, message) {
+            // Set custom message if provided
+            if (message) {
+                alertElement.textContent = message;
+            }
+            
+            // Show the alert
+            alertElement.style.display = 'block';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Generate claim reference number
+        function generateClaimReference() {
+            const dateStr = currentDate.getFullYear().toString() + 
+                           (currentDate.getMonth() + 1).toString().padStart(2, '0') + 
+                           currentDate.getDate().toString().padStart(2, '0');
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            return `CLM-${dateStr}-${randomNum}`;
+        }
+        
+        // Format date for input field (YYYY-MM-DD)
+        function formatDateForInput(date) {
+            return date.toISOString().split('T')[0];
+        }
+        
+        // Close success modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === successModal) {
+                successModal.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
